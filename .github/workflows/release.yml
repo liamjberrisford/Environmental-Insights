@@ -1,0 +1,60 @@
+name: 🔖 Release & Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'pyproject.toml'
+
+permissions:
+  contents: write    # to push tags
+  packages: write    # to publish packages (if you use GitHub Packages)
+  id-token: write    # not strictly needed here, but good practice
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      # your PyPI token stored in Settings → Secrets → PYPI_API_TOKEN
+      TWINE_USERNAME: __token__
+      TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      # a personal access token (scoped to repo) to push the git tag
+      REPO_PAT: ${{ secrets.REPO_PAT }}
+    steps:
+      - name: 👉 Checkout
+        uses: actions/checkout@v3
+        with:
+          # we’ll supply our own PAT for pushing tags
+          persist-credentials: false
+
+      - name: 🔍 Install TOML parser
+        run: pip install toml
+
+      - name: 📦 Read version
+        id: get_version
+        run: |
+          version=$(python3 - <<EOF
+import toml
+print(toml.load('pyproject.toml')['tool']['poetry']['version'])
+EOF
+)
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: 🏷️ Create & push Git tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "v${{ steps.get_version.outputs.version }}"
+          git push https://x-access-token:${REPO_PAT}@github.com/${{ github.repository }} --tags
+
+      - name: 🛠️ Install build & twine
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+
+      - name: 📦 Build distributions
+        run: python -m build --sdist --wheel
+
+      - name: 🚀 Publish to PyPI
+        run: python -m twine upload dist/*
