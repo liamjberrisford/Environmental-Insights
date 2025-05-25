@@ -36,13 +36,3 @@ render() {
 for f in environmental_insights/*.py; do
   render "$f" "environmental_insights"
 done
-
-# tests/integration/
-for f in tests/integration/*.py; do
-  render "$f" "tests/integration"
-done
-
-# tests/unit/
-for f in tests/unit/*.py; do
-  render "$f" "tests/unit"
-done
