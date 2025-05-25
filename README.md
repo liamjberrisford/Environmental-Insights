@@ -1,71 +1,131 @@
-<h1 style="text-align: center; font-size:1vw">Environmental Insights</h1>
+# Environmental Insights
 
-<p align="center">
-  <img src="https://github.com/berrli/Environmental-Insights/raw/main/_static/environmental_insights.png" alt="Environmental Insights" />
-</p>
+[![PyPI version](https://img.shields.io/pypi/v/environmental-insights)](https://pypi.org/project/environmental-insights)  
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPLv3+-blue)](LICENSE)
 
+A Python package for democratizing access to ambient air pollution data and predictive analytics.
 
-Environmental Insights is a Python package for downloading and visualising air pollution concentration data in the UK and globally. Alongside the downloaded data, a set of functions have also been provided to manipulate the air pollution concentrations and explore air pollution futures. The Python package is a companion to the paper entitled "Environmental Insights: Democratizing Access to Ambient Air Pollution Data and Predictive Analytics with an Open-Source Python Package", with the following abstract:
-\
-Ambient air pollution is a pervasive issue with wide-ranging effects on human health, ecosystem vitality, and economic structures. Utilizing data on ambient air pollution concentrations, researchers can perform comprehensive analyses to uncover the multifaceted impacts of air pollution across society. To this end, we introduce Environmental Insights, an open-source Python package designed to democratize access to air pollution concentration data. This tool enables users to easily retrieve historical air pollution data and employ a Machine Learning model for forecasting potential future conditions. Moreover, Environmental Insights includes a suite of tools aimed at facilitating the dissemination of analytical findings and enhancing user engagement through dynamic visualizations. This comprehensive approach ensures that the package caters to the diverse needs of individuals looking to explore and understand air pollution trends and their implications.
+---
 
-This is a contituation of the work started in our recently published paper in Environment and Planning B: Urban Analytics and City Science [Estimating annual ambient air pollution using structural properties of road networks](https://journals.sagepub.com/doi/full/10.1177/23998083241230707)
+## 📖 Description
 
+**Environmental Insights** provides easy-to-use functions to download, process, and analyze ambient air pollution and meteorological data over England.  
+- Implements supervised machine-learning pipelines to predict hourly pollutant concentrations on a 1 km² grid.  
+- Supplies both “typical day” aggregates (percentiles) and full hourly model outputs.  
+- Includes geospatial utilities for mapping, interpolation, and uncertainty analysis.
 
-# Downloading the required data
+---
 
-If you have accessed this work from Github, please read the associated paper that describes the use of this package and its purpose, available here:  
+## ⚙️ Installation
 
-Due to Github file size limitations, all of the models and data to use this package have been hosted on Google Drive. The link to the Google Drive folder is: https://drive.google.com/drive/folders/18ZLO8XqtFp3c4WrUJVfSH0fmAXFmL8il?usp=sharing
+Install from PyPI:
 
+```bash
+pip install environmental-insights
+```
 
+Or from source:
 
-## Recommended Use
+```bash
+git clone https://github.com/berrli/Environmental-Insights.git
+cd Environmental-Insights
+python -m build
+pip install dist/environmental_insights-0.2.1b0-py3-none-any.whl
+```
 
-The code has been validated with Python version 3.9.12. You can install a conda environment with this version with the command "conda create -n "environmental_insight_enviro" python=3.9.12". This will install a conda environment with version 3.9.12 for you to use.
+---
 
-* Step 1: Ensure that jupyter lab is installed. Install instructions are avaliable [here.](https://jupyterlab.readthedocs.io/en/latest/getting_started/installation.html)
-* Step 2: Run the code in "package_installation.ipynb" to ensure all of the required packages are avaliable.
-* Step 2: Run through the "tutorial.ipynb" file, which will explain the basic concepts of the package.
-* Step 4: Look through the file in "Documentation" that describe the complete functionality of the package.
+## 🔗 Dependencies
 
-The tutorial contains a code snippet that will donwload the required packages for the software via the requirements.txt file. The python packages that are required are:
-* lightgbm (3.3.3)
-* geopandas (0.14.1)
-* pandas (2.1.3)
-* scipy (1.11.4)
-* matplotlib (3.8.2)
-* overpy (0.6)
-* shapely (2.0.2)
-* pyarrow (14.0.1)
-* pyogrio (0.7.2)
+- Python ≥ 3.10  
+- geopandas ≥ 1.0.1  
+- lightgbm  
+- matplotlib  
+- overpy  
+- pandas  
+- pyarrow  
+- pyogrio  
+- requests  
+- scipy  
+- shapely  
+- jupyterlab ≥ 4.4.2  
+- xarray ≥ 2025.4.0  
+- netcdf4 ≥ 1.7.2  
+- scikit-learn ≥ 1.6.1  
 
-While the code may work with other versions of these packages, these packages are the ones testing has been conducted on.
+---
 
-These packages can be installed via code provided in the "package_installation.ipynb" file.
+## 📂 Data Sources
 
-The recommended method of using this package is with a jupyter notebook, which the tutorial for this package is written in. The tutorial is avaliable in the file "tutorial.ipynb". The use of [Conda](https://docs.conda.io/en/latest/) and [Jupyter Labs](https://anaconda.org/conda-forge/jupyterlab) to this end is also recommended.
+This package downloads and processes two primary CEDA datasets:
 
-## Aspects of the package
-There are three critical components to the package:
-* Data: The data aspects of the work provide access to air pollution concentration data, both in the UK (at a 1kmx1km hourly resolution) and globally (0.25-degree hourly resolution). Further feature vector data is included for both the UK and global models to see the environmental conditions resulting in the model's development and making the predictions it did.
-* Models: The model's aspect of the work provides access to the trained LightGBM models. With the feature vector data, you can predict air pollution concentrations. Further, the feature vectors can be changed to explore hypothetical situations such as "What would happen to the air pollution if the average wind speed doubled on a Friday in June in London?"
-* Functions: A set of supporting functions has been created to simplify the package's use. This includes accessing the data and models, alongside visualisation and making predictions.
+1. **Synthetic Hourly Air Pollution Prediction Averages for England (SynthHAPPE)**  
+   Berrisford, L. (2025). *Synthetic Hourly Air Pollution Prediction Averages for England (SynthHAPPE).* NERC EDS Centre for Environmental Data Analysis.  
+   DOI: [10.5285/4cbd9c53ab07497ba42de5043d1f414b](https://dx.doi.org/10.5285/4cbd9c53ab07497ba42de5043d1f414b)  
+   > Representative “typical day” profiles of NO₂, NO, NOₓ, O₃, PM₁₀, PM₂.₅ and SO₂ on a 1 km² grid, with 5th, 50th & 95th percentiles.
 
-All visualisations made through the function within the program are stored within the directory "environmental_insights_visulisations".
+2. **Machine Learning for Hourly Air Pollution Prediction in England (ML-HAPPE)**  
+   Berrisford, L. (2025). *Machine Learning for Hourly Air Pollution Prediction in England (ML-HAPPE).* NERC EDS Centre for Environmental Data Analysis.  
+   DOI: [10.5285/fc735f9878ed43e293b85f85e40df24d](https://dx.doi.org/10.5285/fc735f9878ed43e293b85f85e40df24d)  
+   > Full-year (2018) hourly modelled concentrations of NO₂, NO, NOₓ, O₃, PM₁₀, PM₂.₅ and SO₂ on a 1 km² grid, including 5th, 50th & 95th percentiles and underlying training data.
 
-## Testing
-The testing for the package can be found in the "tests" directory making use of the built-in python unittests.
-To make the use of the tests easier, they are included within the test_workbook.ipynb jupyter notebook.
+---
 
-## Documentation
-The documentation for the project is included within the directory "Documentation". The documentation provides the overview of the different functions included in the package.
+For full examples, see the Jupyter-Book tutorial in `book/tutorial_environmental_insights.ipynb`.
 
-### Author
-[Liam Berrisford](https://liamberrisford.info/)
+## 📚 Documentation
 
-# Creating Packages 
+Build and view locally:
 
-## Pypip
+```bash
+jupyter-book build book/
+```
 
-Using `python -m build` will use the `pyproject.toml` file to locally build the package and store it within the `dist` directory. This can then be installed using `pip install dist/*.whl`. The final `dist` files can be uploaded to PyPI via twine, using "". 
+Then open `book/_build/html/index.html` in your browser.  
+Highlights:
+
+- **API Reference**: `book/docs/api/environmental_insights/`  
+- **Tutorial Notebook**: `book/tutorial_environmental_insights.ipynb`
+
+The documentation is also avaiable via the [GitHub Pages Site](https://berrli.github.io/Environmental-Insights/home_page.html)
+
+---
+
+## ✅ Testing
+
+Run the full test suite:
+
+```bash
+pytest
+```
+
+Integration and unit tests are under `tests/`.
+
+---
+
+## 🤝 Contributing
+
+Contributions and bug-reports are very welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on:
+
+- Code style  
+- Pull request process  
+- Issue reporting  
+
+---
+
+## 📑 Citation
+
+If you use *Environmental Insights* in your work, please cite:
+
+> Berrisford, L. J. (2025). Environmental Insights: Democratizing access to ambient air pollution data and predictive analytics (Version 0.2.1b0) [Software]. GitHub. https://github.com/berrli/Environmental-Insights  
+
+Also cite the underlying datasets:
+
+- Berrisford, L. (2025). *SynthHAPPE*: Synthetic Hourly Air Pollution Prediction Averages for England. NERC EDS CEDA. DOI: 10.5285/4cbd9c53ab07497ba42de5043d1f414b  
+- Berrisford, L. (2025). *ML-HAPPE*: Machine Learning for Hourly Air Pollution Prediction in England. NERC EDS CEDA. DOI: 10.5285/fc735f9878ed43e293b85f85e40df24d  
+
+---
+
+## 📜 License
+
+This project is released under the [GPL-3.0-or-later](LICENSE).  
