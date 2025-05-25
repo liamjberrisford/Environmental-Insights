@@ -1,0 +1,13 @@
+format: jb-book
+root: home_page
+parts:
+  - caption: Tutorial
+    chapters:
+      - file: tutorial_environmental_insights
+  - caption: API Reference
+    chapters:
+      - file: docs/api/environmental_insights/environmental_insights.air_pollution_functions
+      - file: docs/api/environmental_insights/environmental_insights.data
+      - file: docs/api/environmental_insights/environmental_insights.download
+      - file: docs/api/environmental_insights/environmental_insights.models
+      - file: docs/api/environmental_insights/environmental_insights.variables

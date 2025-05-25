@@ -1,0 +1,50 @@
+name: Deploy Book
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 1 * * *'       # every day at 1 AM UTC
+  workflow_dispatch:         # manual trigger
+
+jobs:
+  deploy-book:
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "::add-path::${HOME}/.local/bin"
+
+      - name: Install dependencies
+        run: poetry install --no-interaction --no-ansi
+
+      - name: Generate API markdown stubs
+        run: |
+          chmod +x scripts/gen_api_md.sh
+          ./scripts/gen_api_md.sh
+
+      - name: Build Jupyter Book
+        run: poetry run jupyter-book build book/
+
+      - name: Upload built site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: book/_build/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

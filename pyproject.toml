@@ -38,6 +38,8 @@ scikit-learn = "^1.6.1"
 pytest = "^8.3.5"
 ipykernel = "^6.29.5"
 jupyter = "^1.1.1"
+jupyter-book = "^1.0.4.post1"
+pydoc-markdown = "^4.8.2"
 
 [tool.pytest.ini_options]
 filterwarnings = [
