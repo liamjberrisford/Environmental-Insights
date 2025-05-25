@@ -1,7 +1,10 @@
 # Environmental Insights
 
-[![PyPI version](https://img.shields.io/pypi/v/environmental-insights)](https://pypi.org/project/environmental-insights)  
-[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPLv3+-blue)](LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/environmental-insights.svg)](https://pypi.org/project/environmental-insights)  
+[![GitHub release](https://img.shields.io/github/v/release/berrli/Environmental-Insights.svg?sort=semver)](https://github.com/berrli/Environmental-Insights/releases)  
+[![Build status](https://img.shields.io/github/actions/workflow/status/berrli/Environmental-Insights/release.yml?branch=main)](https://github.com/berrli/Environmental-Insights/actions)  
+[![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPLv3+-blue.svg)](LICENSE)
+
 
 A Python package for democratizing access to ambient air pollution data and predictive analytics.
 
