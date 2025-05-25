@@ -3,6 +3,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/environmental-insights.svg?cacheSeconds=3600)](https://pypi.org/project/environmental-insights)
 [![GitHub release](https://img.shields.io/github/v/release/berrli/Environmental-Insights.svg?sort=semver&cacheSeconds=3600)](https://github.com/berrli/Environmental-Insights/releases)
 [![Build status](https://img.shields.io/github/actions/workflow/status/berrli/Environmental-Insights/release.yml?branch=main&cacheSeconds=3600)](https://github.com/berrli/Environmental-Insights/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/berrli/Environmental-Insights/testing.yml?branch=main&label=tests&style=flat-square)](https://github.com/berrli/Environmental-Insights/actions/workflows/testing.yml)
 
 
 
