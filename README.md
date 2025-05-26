@@ -1,9 +1,9 @@
 # Environmental Insights
 
 [![PyPI version](https://img.shields.io/pypi/v/environmental-insights.svg?cacheSeconds=3600)](https://pypi.org/project/environmental-insights)
-[![GitHub release](https://img.shields.io/github/v/release/berrli/Environmental-Insights.svg?sort=semver&cacheSeconds=3600)](https://github.com/berrli/Environmental-Insights/releases)
-[![Build status](https://img.shields.io/github/actions/workflow/status/berrli/Environmental-Insights/release.yml?branch=main&cacheSeconds=3600)](https://github.com/berrli/Environmental-Insights/actions)
-[![Tests](https://img.shields.io/github/actions/workflow/status/berrli/Environmental-Insights/testing.yml?branch=main&label=tests&style=flat-square)](https://github.com/berrli/Environmental-Insights/actions/workflows/testing.yml)
+[![GitHub release](https://img.shields.io/github/v/release/liamjberrisford/Environmental-Insights.svg?sort=semver&cacheSeconds=3600)](https://github.com/liamjberrisford/Environmental-Insights/releases)
+[![Build status](https://img.shields.io/github/actions/workflow/status/liamjberrisford/Environmental-Insights/release.yml?branch=main&cacheSeconds=3600)](https://github.com/liamjberrisford/Environmental-Insights/actions)
+[![Tests](https://img.shields.io/github/actions/workflow/status/liamjberrisford/Environmental-Insights/testing.yml?branch=main&label=tests&style=flat-square)](https://github.com/liamjberrisford/Environmental-Insights/actions/workflows/testing.yml)
 
 
 
@@ -31,7 +31,7 @@ pip install environmental-insights
 Or from source:
 
 ```bash
-git clone https://github.com/berrli/Environmental-Insights.git
+git clone https://github.com/liamjberrisford/Environmental-Insights.git
 cd Environmental-Insights
 python -m build
 pip install dist/environmental_insights-0.2.1b0-py3-none-any.whl
@@ -91,7 +91,7 @@ Highlights:
 - **API Reference**: `book/docs/api/environmental_insights/`  
 - **Tutorial Notebook**: `book/tutorial_environmental_insights.ipynb`
 
-The documentation is also avaiable via the [GitHub Pages Site](https://berrli.github.io/Environmental-Insights/home_page.html)
+The documentation is also avaiable via the [GitHub Pages Site](https://liamjberrisford.github.io/Environmental-Insights/home_page.html)
 
 ---
 
@@ -121,7 +121,7 @@ Contributions and bug-reports are very welcome! Please see [CONTRIBUTING.md](CON
 
 If you use *Environmental Insights* in your work, please cite:
 
-> Berrisford, L. J. (2025). Environmental Insights: Democratizing access to ambient air pollution data and predictive analytics (Version 0.2.1b0) [Software]. GitHub. https://github.com/berrli/Environmental-Insights  
+> Berrisford, L. J. (2025). Environmental Insights: Democratizing access to ambient air pollution data and predictive analytics (Version 0.2.1b0) [Software]. GitHub. https://github.com/liamjberrisford/Environmental-Insights  
 
 Also cite the underlying datasets:
 
