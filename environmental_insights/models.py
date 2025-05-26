@@ -12,8 +12,11 @@ import environmental_insights.download as ei_download  # unified downloader
 
 
 # Constants for directory structure
-MODEL_ROOT = Path("environmental_insights/environmental_insights_models")
-DATA_ROOT = Path("environmental_insights/environmental_insights_data")
+
+# anchor MODEL_ROOT in the same folder as this module:
+SCRIPT_DIR   = Path(__file__).resolve().parent
+MODEL_ROOT   = SCRIPT_DIR / "environmental_insights_models"
+DATA_ROOT    = SCRIPT_DIR / "environmental_insights_data"
 MODEL_CATEGORIES = [
     "All",
     "Emissions_Models",

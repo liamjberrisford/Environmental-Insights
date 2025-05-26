@@ -695,6 +695,32 @@ def get_uk_grids():
     return uk_grids
 
 
+def get_uk_grids_outline():
+    """
+    Get the spatial grid outlines representing the boundaries of the UK Model's 1km grids.
+
+    Returns:
+    GeoDataFrame: A GeoDataFrame of the grid outlines for each UK Model grid alongside their centroid and unique ID.
+    """
+    # Construct the full path to the outline data file
+    outline_filename = os.path.join(
+        script_dir,
+        "environmental_insights_data",
+        "supporting_data",
+        "1km_uk_grids_outline.gpkg",
+    )
+    uk_grids_outline = gpd.read_file(outline_filename)
+
+    # Compute centroids of the outlines for reference
+    uk_grids_outline["geometry Centroid"] = uk_grids_outline.geometry.centroid
+
+    # Rename the grid ID column for consistency
+    uk_grids_outline = uk_grids_outline.rename(columns={"Grid ID": "UK_Model_Grid_ID"})
+
+    return uk_grids_outline
+
+
+
 def get_global_grids():
     """
     Get the spatial grids that represent the locations at which air pollution estimations are made for the Global Model.
