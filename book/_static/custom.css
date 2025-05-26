@@ -1,0 +1,15 @@
+/* Make the overall page container use the full browser width */
+.bd-page-width {
+  max-width: 100% !important;
+}
+
+/* Expand the outer “book” container so there’s no dead L/R space */
+.bd-container,
+.bd-container .bd-container__inner {
+  max-width: 100% !important;
+}
+
+/* Allow the main article content to fill its container */
+.bd-main .bd-content .bd-article-container {
+  max-width: 100% !important;  /* default is 60em */
+}
