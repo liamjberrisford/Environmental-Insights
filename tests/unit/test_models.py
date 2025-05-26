@@ -47,18 +47,36 @@ class TestModelFunctions(unittest.TestCase):
     @patch("environmental_insights.download.download_file")
     @patch("environmental_insights.models.load_lgbm_model_from_txt")
     def test_load_model_united_kingdom(self, mock_load_model, mock_download_file):
+        # Arrange
         mock_load_model.return_value = lgb.LGBMRegressor()
 
-        model = ei_models.load_model_united_kingdom("mean", "no2", "Forecasting_Models", token="abc123")
+        # Act
+        model = ei_models.load_model_united_kingdom(
+            "mean", "no2", "Forecasting_Models", token="abc123"
+        )
 
-        base_url = ei_download.BASE_URLS['ML-HAPPE']
-        expected_booster_url = f"{base_url}Models/mean/no2/All_Stations/no2_Forecasting_Models/model_booster.txt"
-        expected_params_url = f"{base_url}Models/mean/no2/All_Stations/no2_Forecasting_Models/model_params.json"
+        # Assert URLs
+        base_url = ei_download.BASE_URLS["ML-HAPPE"]
+        expected_booster_url = (
+            f"{base_url}"
+            "Models/mean/no2/All_Stations/no2_Forecasting_Models/model_booster.txt"
+        )
+        expected_params_url = (
+            f"{base_url}"
+            "Models/mean/no2/All_Stations/no2_Forecasting_Models/model_params.json"
+        )
 
-        expected_local_dir = Path("environmental_insights/environmental_insights_models/ML-HAPPE/Models/mean/no2/All_Stations/no2_Forecasting_Models")
+        # Assert local directory uses the same MODEL_ROOT as in the code
+        category_path = "Models/mean/no2/All_Stations/no2_Forecasting_Models"
+        expected_local_dir = ei_models.MODEL_ROOT / "ML-HAPPE" / category_path
 
-        mock_download_file.assert_any_call(expected_booster_url, output_dir=expected_local_dir, token="abc123")
-        mock_download_file.assert_any_call(expected_params_url, output_dir=expected_local_dir, token="abc123")
+        # Verify download_file was called for both booster and params
+        mock_download_file.assert_any_call(
+            expected_booster_url, output_dir=expected_local_dir, token="abc123"
+        )
+        mock_download_file.assert_any_call(
+            expected_params_url, output_dir=expected_local_dir, token="abc123"
+        )
         self.assertIsInstance(model, lgb.LGBMRegressor)
 
     @patch("environmental_insights.models.load_model_united_kingdom")
