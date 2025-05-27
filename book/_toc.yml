@@ -4,6 +4,10 @@ parts:
   - caption: Tutorial
     chapters:
       - file: tutorial_environmental_insights
+  - caption: Data Explorer
+    chapters:
+      - file: data_explorer_england
+      - file: data_explorer_england_synthetic
   - caption: API Reference
     chapters:
       - file: docs/api/environmental_insights/environmental_insights.air_pollution_functions
