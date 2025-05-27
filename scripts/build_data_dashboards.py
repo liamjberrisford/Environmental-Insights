@@ -29,7 +29,7 @@ HOUR          = 9
 REALTIME_TIME = "2018-01-01_090000"  # YYYY-MM-DD_HHMMSS
 
 VAR_NAME      = "no2_Prediction_Mean"
-VAR_NAME_NEAT = "Nitrogen Dioxide Predicition Mean" 
+VAR_NAME_NEAT = "Nitrogen Dioxide Prediction Mean"
 OUT_TYP_HTML  = "../book/_static/synthhappe_no2.html"
 OUT_RT_HTML   = "../book/_static/mlhappe_no2.html"
 # ======================
@@ -44,30 +44,48 @@ def load_uk_grid():
     return gdf[["UK_Model_Grid_ID", "geometry"]]
 
 
-def prepare_and_merge(df, grid_gdf):
+def prepare_and_merge(df, grid_gdf,
+                      simplify_tol=0.0005,  # ~55 m, preserves square corners
+                      quantize_digits=4):   # ~11 m grid
     """
-    Merge OUTPUT data on UK_Model_Grid_ID, cast to float16, simplify geometry coords,
-    reproject to WGS84, and return minimal GeoDataFrame.
+    Merge OUTPUT data on UK_Model_Grid_ID, cast to float16, simplify geometry,
+    quantize coordinates, reproject to WGS84, strip to minimal columns.
+    Adjust `simplify_tol` to be below half of your cell side length to avoid
+    collapsing a square into a triangle.
     """
-    # select ID and variable, drop NaNs
+    # 1) select ID and variable, drop NaNs
     df2 = df[["UK_Model_Grid_ID", VAR_NAME]].dropna(subset=[VAR_NAME]).copy()
-    # cast variable to float16
     df2[VAR_NAME] = df2[VAR_NAME].astype(np.float16)
 
-    # merge with grid polygons
+    # 2) merge with grid polygons
     merged = grid_gdf.merge(df2, on="UK_Model_Grid_ID", how="inner")
 
-    # ensure WGS84
+    # 3) ensure WGS84
     if merged.crs != "EPSG:4326":
         merged = merged.to_crs(epsg=4326)
 
-    # round geometry coordinates to 2 decimals (~1m precision)
-    def _round_geom(geom):
-        return transform(lambda x, y: (round(x, 2), round(y, 2)), geom)
-    merged["geometry"] = merged["geometry"].apply(_round_geom)
-    merged = merged.rename(columns={VAR_NAME:VAR_NAME_NEAT})
-    # keep only needed columns
-    return merged[["geometry", VAR_NAME_NEAT]]
+    # 4) simplify geometry to reduce vertex count, use small tolerance
+    merged["geometry"] = merged.geometry.simplify(
+        tolerance=simplify_tol,
+        preserve_topology=True
+    )
+
+    # 5) quantize coordinates to fixed decimal grid
+    def _quantize(geom):
+        return transform(
+            lambda x, y: (
+                round(x, quantize_digits),
+                round(y, quantize_digits)
+            ),
+            geom
+        )
+    merged["geometry"] = merged.geometry.apply(_quantize)
+
+    # 6) rename the NO₂ column and strip to only geometry + value
+    merged = merged.rename(columns={VAR_NAME: VAR_NAME_NEAT})
+    minimal = merged[["geometry", VAR_NAME_NEAT]].reset_index(drop=True)
+
+    return minimal
 
 
 def build_no2_grid_dashboard(grid_gdf, df, out_html):
@@ -77,14 +95,12 @@ def build_no2_grid_dashboard(grid_gdf, df, out_html):
     """
     plot_gdf = prepare_and_merge(df, grid_gdf)
 
-
-    
     print(f"[{out_html}] plotting {len(plot_gdf)} grid polygons of '{VAR_NAME_NEAT}'")
 
     uk_config = {
       "version": "v1",
       "config": {
-        "mapState": {"latitude": 54.0, "longitude": -2.0, "zoom": 5, "pitch": 0, "bearing": 0},
+        "mapState": {"latitude": 52.0, "longitude": -1.5, "zoom": 4.5, "pitch": 0, "bearing": 0},
         "visState": {
           "layers": [
             {
@@ -114,7 +130,10 @@ def build_no2_grid_dashboard(grid_gdf, df, out_html):
                   }
                 }
               },
-              "visualChannels": {"colorField": {"name": VAR_NAME_NEAT, "type": "real"}, "colorScale": "quantile"}
+              "visualChannels": {
+                "colorField": {"name": VAR_NAME_NEAT, "type": "real"},
+                "colorScale": "quantile"
+              }
             }
           ],
           "interactionConfig": {
@@ -149,6 +168,7 @@ def main():
         REALTIME_TIME, data_type="Output"
     )
     build_no2_grid_dashboard(grid_gdf, rt_out, OUT_RT_HTML)
+
 
 if __name__ == "__main__":
     main()
