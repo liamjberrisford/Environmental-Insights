@@ -17,9 +17,18 @@ latex:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/liamjberrisford/Environmental-Insights  # Online location of your book
-  path_to_book: book  # Optional path to your book, relative to the repository root
-  branch: main  # Which branch of the repository should be used when creating links (optional)
+  url: https://github.com/liamjberrisford/Environmental-Insights
+  path_to_book: book
+  branch: main
+
+# configure the interactive launch buttons
+launch_buttons:
+  # (optional) which interface Binder/JupyterHub should use:
+  notebook_interface: "jupyterlab"
+  # (optional) point at Binder if you want users to spin up kernels via Binder:
+  binderhub_url: "https://mybinder.org"
+  # turn on Thebe!
+  thebe: true   # ← this is the key bit :contentReference[oaicite:0]{index=0}
 
 # Add GitHub buttons to your book
 html:

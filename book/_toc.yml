@@ -8,6 +8,9 @@ parts:
     chapters:
       - file: data_explorer_england
       - file: data_explorer_england_synthetic
+  - caption: Package Explorer 
+    chapters:
+      - file: sandbox
   - caption: API Reference
     chapters:
       - file: docs/api/environmental_insights/environmental_insights.air_pollution_functions
