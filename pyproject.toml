@@ -33,6 +33,7 @@ jupyterlab = "^4.4.2"
 xarray = "^2025.4.0"
 netcdf4 = "^1.7.2"
 scikit-learn = "^1.6.1"
+keplergl = "0.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
@@ -40,7 +41,6 @@ ipykernel = "^6.29.5"
 jupyter = "^1.1.1"
 jupyter-book = "^1.0.4.post1"
 pydoc-markdown = "^4.8.2"
-keplergl = "^0.3.7"
 setuptools = "<81"
 
 [tool.pytest.ini_options]
