@@ -39,26 +39,6 @@ pip install dist/environmental_insights-0.2.1b0-py3-none-any.whl
 
 ---
 
-## 🔗 Dependencies
-
-- Python ≥ 3.10  
-- geopandas ≥ 1.0.1  
-- lightgbm  
-- matplotlib  
-- overpy  
-- pandas  
-- pyarrow  
-- pyogrio  
-- requests  
-- scipy  
-- shapely  
-- jupyterlab ≥ 4.4.2  
-- xarray ≥ 2025.4.0  
-- netcdf4 ≥ 1.7.2  
-- scikit-learn ≥ 1.6.1  
-
----
-
 ## 📂 Data Sources
 
 This package downloads and processes two primary CEDA datasets:
