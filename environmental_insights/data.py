@@ -82,8 +82,10 @@ def get_uk_monitoring_station(
         pollutant
     )
     os.makedirs(out_dir, exist_ok=True)
-    filename = station + ".nc"
-    full_path = out_dir + filename
+
+    # build path to file
+    fname = station if station.endswith(".nc") else f"{station}.nc"
+    full_path = os.path.join(out_dir, fname)
 
     # download from EI if not already on disk
     if not os.path.isfile(full_path):
@@ -95,9 +97,7 @@ def get_uk_monitoring_station(
             output_dir=out_dir
         )
 
-    # build path to file
-    fname = station if station.endswith(".nc") else f"{station}.nc"
-    full_path = os.path.join(out_dir, fname)
+
 
     # read and convert
     ds = read_nc(full_path)
