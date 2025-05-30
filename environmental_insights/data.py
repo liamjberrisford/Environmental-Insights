@@ -9,6 +9,8 @@ import itertools
 from operator import itemgetter
 import xarray as xr
 import environmental_insights.download as ei_download
+from typing import List, Optional
+
 
 
 pd.options.mode.chained_assignment = None  # default='warn'
@@ -48,6 +50,71 @@ def netcdf_to_dataframe(ds: xr.Dataset) -> pd.DataFrame:
     df = ds.to_dataframe()
     df = df.dropna(how="all")
     return df.reset_index()
+
+def get_uk_monitoring_station(
+    pollutant: str,
+    station: str,
+) -> gpd.GeoDataFrame:
+    """
+    Download (if needed) and load ML-HAPPE training data for a single UK monitoring station.
+    
+    Parameters
+    ----------
+    pollutant : str
+        One of the POLLUTANTS in ML-HAPPE (e.g. "no2").
+    station : str
+        Name of the station (without “.nc”).
+    token : str, optional
+        Your CEDA API token, if required.
+
+    Returns
+    -------
+    GeoDataFrame
+        The station’s training data as a GeoDataFrame, with a Point geometry
+        constructed from its latitude/longitude.
+    """
+    # local folder under your book’s script_dir
+    out_dir = os.path.join(
+        script_dir,
+        "environmental_insights_data",
+        "ML-HAPPE",
+        "Training_Data",
+        pollutant
+    )
+    os.makedirs(out_dir, exist_ok=True)
+
+    # ensure the .nc is present
+    ei_download.download(
+        dataset="ML-HAPPE",
+        data_type="Training_Data",
+        pollutant=pollutant,
+        station=station,
+        output_dir=out_dir
+    )
+
+    # build path to file
+    fname = station if station.endswith(".nc") else f"{station}.nc"
+    full_path = os.path.join(out_dir, fname)
+
+    # read and convert
+    ds = read_nc(full_path)
+    df = netcdf_to_dataframe(ds)
+
+    return df
+
+def get_uk_monitoring_stations(
+    pollutant: str,
+) -> List[str]:
+    """
+    Ensure the local ML-HAPPE Training_Data folder exists for a pollutant,
+    then return the list of all station names by delegating to download.py.
+    """
+    # validate against the download module’s list
+    if pollutant not in ei_download.POLLUTANTS:
+        raise ValueError(f"Invalid pollutant: {pollutant}")
+
+    # delegate to download.py’s HTML scraper
+    return ei_download.get_training_station_names(pollutant)
 
 def air_pollution_concentration_typical_day_real_time_united_kingdom(
     month: int,

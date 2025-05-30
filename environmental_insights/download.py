@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import List, Optional, Union
 import environmental_insights
 import calendar
+import requests
+from bs4 import BeautifulSoup
+from pathlib import Path
 
 # Determine the package root for default downloads
 PACKAGE_ROOT = Path(environmental_insights.__file__).parent
@@ -174,6 +177,26 @@ def download_training_data(
     url = f"{BASE_URLS['ML-HAPPE']}Training_Data/{pollutant}/{fn}"
     download_file(url, output_dir, token)
 
+def get_training_station_names(
+    pollutant: str
+) -> list[str]:
+    """
+    Return a sorted list of all station names (without “.nc”) available
+    under ML-HAPPE/Training_Data/{pollutant}/.
+    """
+    if pollutant not in POLLUTANTS:
+        raise ValueError(f"Invalid pollutant: {pollutant}")
+    url = f"{BASE_URLS['ML-HAPPE']}Training_Data/{pollutant}/"
+    resp = requests.get(url)
+    resp.raise_for_status()
+    soup = BeautifulSoup(resp.text, "html.parser")
+    stations = {
+        Path(link.get("href")).stem
+        for link in soup.find_all("a", href=True)
+        if link["href"].endswith(".nc")
+    }
+    return sorted(stations)
+
 
 def download(
     dataset: str,
@@ -213,8 +236,18 @@ def download(
             raise ValueError("`model_level` and `pollutant` are required for Models downloads")
         download_models(model_level, pollutant, token, output_dir)
     elif data_type == 'Training_Data':
-        if not pollutant or not station:
-            raise ValueError("`pollutant` and `station` are required for Training_Data downloads")
-        download_training_data(pollutant, station, token, output_dir)
+        if not pollutant:
+            raise ValueError("`pollutant` is required for Training_Data")
+        if station:
+            # ------ SINGLE-STATION DOWNLOAD: ------
+            download_training_data(
+                pollutant=pollutant,
+                station=station,
+                token=token,
+                output_dir=output_dir
+            )
+        else:
+            # ------ LIST AVAILABLE STATIONS: ------
+            return get_training_station_names(pollutant, token)
     else:
         raise ValueError(f"Type for ML-HAPPE must be one of {ML_HAPPE_TYPES}")
