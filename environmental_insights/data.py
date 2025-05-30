@@ -82,15 +82,18 @@ def get_uk_monitoring_station(
         pollutant
     )
     os.makedirs(out_dir, exist_ok=True)
+    filename = station + ".nc"
+    full_path = out_dir + filename
 
-    # ensure the .nc is present
-    ei_download.download(
-        dataset="ML-HAPPE",
-        data_type="Training_Data",
-        pollutant=pollutant,
-        station=station,
-        output_dir=out_dir
-    )
+    # download from EI if not already on disk
+    if not os.path.isfile(full_path):
+        ei_download.download(
+            dataset="ML-HAPPE",
+            data_type="Training_Data",
+            pollutant=pollutant,
+            station=station,
+            output_dir=out_dir
+        )
 
     # build path to file
     fname = station if station.endswith(".nc") else f"{station}.nc"
