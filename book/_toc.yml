@@ -11,6 +11,7 @@ parts:
   - caption: Package Explorer 
     chapters:
       - file: sandbox
+      - file: training_data_explorer
   - caption: API Reference
     chapters:
       - file: docs/api/environmental_insights/environmental_insights.air_pollution_functions

@@ -1,21 +1,21 @@
 # Book settings
-# Learn more at https://jupyterbook.org/customize/config.html
-
 title: Environmental Insights 
 author: Liam J Berrisford
 logo: _static/logo.png
 
-# Force re-execution of notebooks on each build.
-# See https://jupyterbook.org/content/execute.html
+# Force re-execution of notebooks on each build,
+# but exclude one R notebook
 execute:
-  execute_notebooks: force
+  execute_notebooks: "force"
+  exclude_patterns:
+    - 'tutorial_environmental_insights.ipynb'
 
-# Define the name of the latex output file for PDF builds
+# Define the name of the LaTeX output file for PDF builds
 latex:
   latex_documents:
     targetname: book.tex
 
-# Information about where the book exists on the web
+# Repository info
 repository:
   url: https://github.com/liamjberrisford/Environmental-Insights
   path_to_book: book
@@ -23,12 +23,9 @@ repository:
 
 # configure the interactive launch buttons
 launch_buttons:
-  # (optional) which interface Binder/JupyterHub should use:
   notebook_interface: "jupyterlab"
-  # (optional) point at Binder if you want users to spin up kernels via Binder:
   binderhub_url: "https://mybinder.org"
-  # turn on Thebe!
-  thebe: true   # ← this is the key bit :contentReference[oaicite:0]{index=0}
+  thebe: true
 
 # Add GitHub buttons to your book
 html:
@@ -36,23 +33,20 @@ html:
   use_edit_page_button: true
   use_issues_button: true
   use_navigation_shortcuts: false
+
+  # ----------------------------------------------------------
+  #  ▶ Because ipywidgets require client-side JS to render,
+  #  we include the official embed script here. Without this,
+  #  "Error displaying widget" will appear in the browser.
+  # ----------------------------------------------------------
+  extra_javascript:
+    - _static/embed-amd.js
+
   extra_css:
-      - _static/remove_prev_next_bottom_buttons.css
+    - _static/remove_prev_next_bottom_buttons.css
 
 sphinx:
-  # merge our overrides into the generated conf.py
   recursive_update: true
-
   config:
-    # pass through to Sphinx's html_context
     html_context:
-      # force the light theme by default
       default_mode: light
-
-
-# Execute all notebooks by default. 
-# The R notebooks are excluded from running during the building of the book due to the formatting issues. When ran wen building the output for each of the cells will create a new code block for each space due to the R magic command.
-execute:
-  execute_notebooks: "force"
-  exclude_patterns:
-    - 'tutorial_environmental_insights.ipynb'

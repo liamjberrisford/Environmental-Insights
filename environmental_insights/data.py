@@ -103,7 +103,11 @@ def get_uk_monitoring_station(
     ds = read_nc(full_path)
     df = netcdf_to_dataframe(ds)
 
-    return df
+    # Create a geometry column from Easting/Northing
+    geometry = [Point(xy) for xy in zip(df["Easting"], df["Northing"])]
+    gdf = gpd.GeoDataFrame(df.copy(), geometry=geometry, crs=3395)
+
+    return gdf
 
 def get_uk_monitoring_stations(
     pollutant: str,
