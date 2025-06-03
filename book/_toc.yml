@@ -3,15 +3,15 @@ root: home_page
 parts:
   - caption: Tutorial
     chapters:
-      - file: tutorial_environmental_insights
+      - file: notebooks/tutorial/tutorial_environmental_insights
   - caption: Data Explorer
     chapters:
-      - file: data_explorer_england
-      - file: data_explorer_england_synthetic
+      - file: notebooks/data_explorer/data_explorer_england
+      - file: notebooks/data_explorer/data_explorer_england_synthetic
+      - file: notebooks/data_explorer/training_data_explorer
   - caption: Package Explorer 
     chapters:
-      - file: sandbox
-      - file: training_data_explorer
+      - file: notebooks/package_explorer/sandbox
   - caption: API Reference
     chapters:
       - file: docs/api/environmental_insights/environmental_insights.air_pollution_functions
