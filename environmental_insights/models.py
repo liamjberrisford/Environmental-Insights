@@ -29,6 +29,8 @@ MODEL_CATEGORIES = [
     "Temporal_Models",
     "Transport_Infrastructure_Models",
     "Transport_Use_Models",
+    "Climate_Projections_Models",
+    "Transport_Infrastructure_Policy_Models",
 ]
 
 
@@ -90,6 +92,7 @@ def load_lgbm_model_from_txt(booster_filepath, params_filepath):
         print(f"Failed to load the model: {e}")
         return None
     
+
 def load_model_united_kingdom(
     model_level: str,
     pollutant: str,
@@ -100,34 +103,53 @@ def load_model_united_kingdom(
     Load a pretrained UK air pollution LGBM model for a specific category,
     downloading only the required booster + params.
 
-    Parameters:
-    - model_level: one of ['0.05','0.5','0.95','mean']
-    - pollutant: one of ['no','no2','nox','o3','pm10','pm2p5','so2']
-    - model_category: one of MODEL_CATEGORIES or 'All'
+    Model directory structure (identical for both namespaces):
+      {namespace}/Models/{level}/{pollutant}/All_Stations/{pollutant}_{category}
+    but when model_category == "All", use just {pollutant} with no suffix.
+
+    Namespaces:
+      - ML-HAPPE          (for existing categories)
+      - SynthHAPPE_v2     (for Climate_Projections_Models and Transport_Infrastructure_Policy_Models)
     """
-    # Correctly handle the special "All" category
-    if model_category == "All":
-        category_path = f"Models/{model_level}/{pollutant}/All_Stations/{pollutant}"
+    # choose namespace
+    if model_category in (
+        "Climate_Projections_Models",
+        "Transport_Infrastructure_Policy_Models",
+    ):
+        namespace = "SynthHAPPE_v2"
     else:
-        category_path = f"Models/{model_level}/{pollutant}/All_Stations/{pollutant}_{model_category}"
+        namespace = "ML-HAPPE"
 
-    base_url = ei_download.BASE_URLS['ML-HAPPE']
-    booster_url = f"{base_url}{category_path}/model_booster.txt"
-    params_url = f"{base_url}{category_path}/model_params.json"
+    # build the suffix for the All_Stations folder
+    if model_category == "All":
+        suffix = pollutant
+    else:
+        suffix = f"{pollutant}_{model_category}"
 
-    local_dir = MODEL_ROOT / "ML-HAPPE" / category_path
+    # build the remote path
+    remote_path = f"Models/{model_level}/{pollutant}/All_Stations/{suffix}"
+
+    base_url    = ei_download.BASE_URLS[namespace]
+    booster_url = f"{base_url}{remote_path}/model_booster.txt"
+    params_url  = f"{base_url}{remote_path}/model_params.json"
+
+    # mirror that path locally
+    local_dir = MODEL_ROOT / namespace / remote_path
     local_dir.mkdir(parents=True, exist_ok=True)
 
     booster_file = local_dir / "model_booster.txt"
-    params_file = local_dir / "model_params.json"
+    params_file  = local_dir / "model_params.json"
 
-    # Download only missing files
-    if not booster_file.is_file():
+    # download if missing
+    if not booster_file.exists():
         ei_download.download_file(str(booster_url), output_dir=local_dir, token=token)
-    if not params_file.is_file():
-        ei_download.download_file(str(params_url), output_dir=local_dir, token=token)
+    if not params_file.exists():
+        ei_download.download_file(str(params_url),  output_dir=local_dir, token=token)
 
+    # load and return the LightGBM model
     return load_lgbm_model_from_txt(booster_file, params_file)
+
+
 
 
 

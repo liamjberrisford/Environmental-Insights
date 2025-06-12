@@ -15,6 +15,7 @@ PACKAGE_ROOT = Path(environmental_insights.__file__).parent
 BASE_URLS = {
     "ML-HAPPE": "https://dap.ceda.ac.uk/badc/deposited2025/ML-HAPPE/",
     "SynthHAPPE": "https://dap.ceda.ac.uk/badc/deposited2025/SynthHAPPE/",
+    "SynthHAPPE_v2": "https://dap.ceda.ac.uk/badc/deposited2025/SynthHAPPE_v2/",
 }
 
 # Valid options
@@ -35,6 +36,8 @@ MODEL_CATEGORIES = [
     "Temporal_Models",
     "Transport_Infrastructure_Models",
     "Transport_Use_Models",
+    "Climate_Projections_Models",
+    "Transport_Infrastructure_Policy_Models",
 ]
 
 
@@ -138,26 +141,36 @@ def download_models(
     output_dir: Optional[Union[str, Path]] = None
 ) -> None:
     """
-    Download ML-HAPPE model files for each category, or all if 'All' is specified.
+    Download the LightGBM booster and params files for a given model.
+    - For ML-HAPPE models: path is ML-HAPPE/Models/{level}/{pollutant}/All_Stations/{pollutant}_{category}
+    - For SynthHAPPE_v2 models: path is SynthHAPPE_v2/Models/{category}
     """
-    if model_level not in MODEL_LEVELS:
-        raise ValueError(f"Invalid model level: {model_level}")
-    if pollutant not in POLLUTANTS:
-        raise ValueError(f"Invalid pollutant: {pollutant}")
+    # normalize output_dir
+    out = Path(output_dir or Path.cwd())
+    if model_category not in MODEL_CATEGORIES:
+        raise ValueError(f"Unknown model_category: {model_category!r}")
 
-    base = BASE_URLS['ML-HAPPE']
+    # pick namespace & build subdir(s)
+    if model_category in ("Climate_Projections_Models", "Transport_Infrastructure_Policy_Models"):
+        base = BASE_URLS["SynthHAPPE_v2"]
+        subdirs = [f"Models/{model_category}"]
+    else:
+        base = BASE_URLS["ML-HAPPE"]
+        cats = MODEL_CATEGORIES[1:] if model_category == "All" else [model_category]
+        subdirs = [
+            f"Models/{model_level}/{pollutant}/All_Stations/{pollutant}_{cat}"
+            for cat in cats
+        ]
 
-    # If 'All', download each category separately
-    categories_to_download = MODEL_CATEGORIES if model_category == "All" else [model_category]
-
-    for category in categories_to_download:
-        subdir = f"Models/{model_level}/{pollutant}/All_Stations/{pollutant}_{category}"
+    # download each file in each subdir
+    for sd in subdirs:
         for fname in ("model_booster.txt", "model_params.json"):
-            url = f"{base}{subdir}/{fname}"
-            try:
-                download_file(url, output_dir, token)
-            except RuntimeError as e:
-                print(f"Warning: {e}")
+            url = f"{base}{sd}/{fname}"
+            print(f"→ Downloading {url}")
+            download_file(url, out / model_category, token)
+
+    print("Download complete.")
+
 
 
 
